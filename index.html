@@ -1,0 +1,1795 @@
+<!doctype html>
+<html lang="zh-Hant-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important}img{max-width:100%}</style>
+<title>排出五位數</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=LXGW+WenKai+TC:wght@400;700&display=swap">
+<style>
+/* Layout: a worksheet desk. The six questions run down the left like the printed sheet; the drawn cards wait in a tray above a place-value chart (最高位→個位) at centre stage. */
+:root {
+  /* colour: exercise-book paper, pen ink, card stock, teacher's red pen */
+  --paper: #F4F7FB;
+  --grid: #DFE7F2;
+  --ink: #1A2949;
+  --ink-2: #536080;
+  --line: #B6C3D8;
+  --panel: #FFFFFF;
+  --card: #FFFFFF;
+  --card-ink: #1A2949;
+  --card-edge: #C2CDDF;
+  --back: #2C56CC;
+  --back-2: #456DDA;
+  --on-back: #FFFFFF;
+  --blue: #2C56CC;
+  --on-blue: #FFFFFF;
+  --blue-soft: #E2E9FB;
+  --red: #CF2139;
+  --hint-bg: #FFF3CF;
+  --hint-ink: #5E3D00;
+  --hint-line: #E5BB55;
+  --shade: 26 41 73;
+  --stamp-blend: multiply;
+  /* type: kaishu for words (as on HK worksheets), rounded numerals for the cards */
+  --font-zh: "LXGW WenKai TC", "Kaiti TC", "BiauKai", "DFKai-SB", "標楷體", "STKaiti", "KaiTi", serif;
+  --font-num: "Fredoka", "Nunito", "Arial Rounded MT Bold", ui-rounded, "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #101828;
+    --grid: #19243A;
+    --ink: #E5EBF6;
+    --ink-2: #A0ACC5;
+    --line: #3A4A6A;
+    --panel: #162036;
+    --card: #EEF2F9;
+    --card-ink: #1A2949;
+    --card-edge: #8C98B2;
+    --back: #3A62D6;
+    --back-2: #5379E2;
+    --on-back: #FFFFFF;
+    --blue: #86A2FF;
+    --on-blue: #0C1430;
+    --blue-soft: #213159;
+    --red: #FF6276;
+    --hint-bg: #322810;
+    --hint-ink: #FFD88A;
+    --hint-line: #6C5320;
+    --shade: 0 0 0;
+    --stamp-blend: normal;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #101828;
+  --grid: #19243A;
+  --ink: #E5EBF6;
+  --ink-2: #A0ACC5;
+  --line: #3A4A6A;
+  --panel: #162036;
+  --card: #EEF2F9;
+  --card-ink: #1A2949;
+  --card-edge: #8C98B2;
+  --back: #3A62D6;
+  --back-2: #5379E2;
+  --on-back: #FFFFFF;
+  --blue: #86A2FF;
+  --on-blue: #0C1430;
+  --blue-soft: #213159;
+  --red: #FF6276;
+  --hint-bg: #322810;
+  --hint-ink: #FFD88A;
+  --hint-line: #6C5320;
+  --shade: 0 0 0;
+  --stamp-blend: normal;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 28px 28px;
+  color: var(--ink);
+  font-family: var(--font-zh);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; -webkit-tap-highlight-color: transparent; }
+h1, h2, p { margin: 0; }
+
+/* ---------- school letterhead ---------- */
+.school-bar {
+  padding-inline: 16px;
+  padding-block: 12px 10px;
+  background: var(--panel);
+  border-bottom: 4px double var(--ink);
+  text-align: center;
+}
+.school-name {
+  font-size: clamp(19px, 2.3vw, 28px);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: .24em;
+  padding-left: .24em;
+  text-wrap: balance;
+}
+
+.app {
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: 16px;
+  padding-block: 14px 28px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+}
+@media (min-width: 980px) {
+  .app {
+    grid-template-columns: 270px minmax(0, 1fr);
+    column-gap: 36px;
+    padding-inline: 28px;
+    padding-block: 24px 36px;
+    align-items: start;
+  }
+}
+
+/* ---------- side: title, digit count and the worksheet's six questions ---------- */
+.side { display: grid; gap: 16px; min-width: 0; }
+.masthead { display: grid; gap: 8px; justify-items: start; }
+.title-box {
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: .16em;
+  padding: 6px 10px 6px 16px;
+  border: 2.5px solid var(--ink);
+  background: var(--panel);
+}
+.lede { color: var(--ink-2); font-size: 15px; line-height: 1.6; max-width: 34em; }
+
+.digits { display: grid; gap: 6px; }
+.digits-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  padding-inline: 2px;
+  font-size: 14px;
+  color: var(--ink-2);
+  letter-spacing: .06em;
+}
+.digits-note { font-size: 13px; letter-spacing: 0; }
+.seg {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--panel);
+}
+.seg-btn {
+  min-height: 42px;
+  padding: 0;
+  border: 0;
+  border-left: 1.5px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  font: 600 18px/1 var(--font-num);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color .15s;
+}
+.seg-btn:first-child { border-left: 0; }
+.seg-btn:hover { background: var(--paper); }
+.seg-btn[aria-pressed="true"] { background: var(--blue); color: var(--on-blue); }
+.seg-btn:focus-visible { outline: 3px solid var(--blue); outline-offset: -5px; }
+.seg-btn[aria-pressed="true"]:focus-visible { outline-color: var(--on-blue); }
+
+.qnav {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  background: var(--panel);
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+}
+.qnav-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  padding-inline: 6px;
+  font-size: 14px;
+  color: var(--ink-2);
+  letter-spacing: .06em;
+}
+#progress { font-variant-numeric: tabular-nums; }
+.qgrid { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.qbtn {
+  display: grid;
+  grid-template-columns: 1.7em minmax(0, 1fr);
+  grid-template-areas: "n t" "n s";
+  column-gap: 4px;
+  align-items: start;
+  width: 100%;
+  padding: 9px 10px;
+  text-align: left;
+  font-size: 18px;
+  line-height: 1.4;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.qbtn:hover { background: var(--paper); }
+.qbtn[aria-current="true"] { background: var(--blue-soft); border-color: var(--blue); }
+.qbtn .qn { grid-area: n; font-family: var(--font-num); font-weight: 500; color: var(--ink-2); }
+.qbtn .qt { grid-area: t; min-width: 0; }
+.qbtn .qt-short { display: none; }
+.qbtn .key { font-style: normal; font-weight: 700; }
+.qbtn .qs { grid-area: s; display: flex; align-items: center; gap: 4px; font-size: 14px; color: var(--ink-2); }
+.qbtn .qs:empty { display: none; }
+.qbtn[data-status="solved"] .qs { color: var(--red); font-family: var(--font-num); font-weight: 600; font-size: 15px; }
+.qs svg { width: 16px; height: 16px; flex: none; }
+.qextra {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1.5px dashed var(--line);
+}
+.qbtn.qbtn-free {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 17px;
+  border-color: var(--line);
+  min-height: 48px;
+}
+.qbtn.qbtn-free[aria-current="true"] { border-color: var(--blue); }
+.kbd-tip { font-size: 13.5px; color: var(--ink-2); padding-inline: 4px; line-height: 1.6; }
+@media (hover: none), (pointer: coarse) { .kbd-tip { display: none; } }
+
+@media (max-width: 979px) {
+  .title-box { font-size: 24px; }
+  .lede { font-size: 14px; }
+  .kbd-tip { display: none; }
+  .qnav { padding: 10px; }
+  .qgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .qbtn { column-gap: 6px; grid-template-columns: auto minmax(0, 1fr); padding: 7px 8px; font-size: 15.5px; border-color: var(--line); }
+  .qbtn .qt-long { display: none; }
+  .qbtn .qt-short { display: inline; }
+  .qbtn .qs { font-size: 12.5px; }
+  .qbtn[data-status="solved"] .qs { font-size: 13px; }
+  .qbtn.qbtn-free { min-height: 44px; font-size: 15.5px; }
+}
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 12px;
+  border: 2px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  font: 700 18px/1.1 var(--font-zh);
+  letter-spacing: .04em;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: border-color .15s, background-color .15s, translate .1s;
+}
+.btn:hover { border-color: var(--ink-2); }
+.btn:active { translate: 0 1px; }
+.btn svg { width: 20px; height: 20px; flex: none; }
+.btn-primary { background: var(--blue); border-color: var(--blue); color: var(--on-blue); }
+.btn-primary:hover { border-color: var(--ink); }
+.btn-outline { border-color: var(--blue); color: var(--blue); }
+.btn-outline:hover { background: var(--blue-soft); border-color: var(--blue); }
+.btn-quiet { background: transparent; }
+.btn:disabled { opacity: .45; cursor: not-allowed; translate: none; }
+.btn:focus-visible, .qbtn:focus-visible, .slot:focus-visible, .dbtn:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+
+/* ---------- stage: cards, chart, feedback ---------- */
+.stage {
+  container-type: inline-size;
+  min-width: 0;
+  display: grid;
+  gap: clamp(12px, 2.4vh, 22px);
+  --n: 5;
+  --boardw: min(100cqi, calc(var(--n) * 200px + 4px));
+  --colw: calc((var(--boardw) - 4px) / var(--n));
+  --cw: clamp(26px, min(12.5vh, calc(var(--colw) - min(24px, var(--colw) * .22))), 136px);
+  --ch: calc(var(--cw) * 1.27);
+  --cr: calc(var(--cw) * .14);
+  --sg: min(6px, calc(var(--cw) * .1));
+}
+@supports not (width: 1cqi) {
+  .stage {
+    --boardw: min(100%, calc(var(--n) * 200px + 4px));
+    --colw: calc((min(100vw - 40px, var(--n) * 200px + 4px) - 4px) / var(--n));
+  }
+  @media (min-width: 980px) {
+    .stage { --colw: calc((min(100vw - 400px, var(--n) * 200px + 4px) - 4px) / var(--n)); }
+  }
+}
+
+.deck { display: grid; gap: 6px; }
+.deck-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 14px;
+}
+.deck-head h2 { font-size: 20px; font-weight: 700; letter-spacing: .04em; }
+.deck-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 520px) {
+  .lede { display: none; }
+  .deck-head h2 { font-size: 17px; }
+  .deck-actions .btn { min-height: 40px; padding: 0 11px; font-size: 16px; }
+  .deck-actions .btn svg { width: 18px; height: 18px; }
+}
+.tray {
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  width: 100%;
+  max-width: var(--boardw);
+  padding-block: 16px 10px;
+  border-radius: 14px;
+  outline: 2px dashed transparent;
+  outline-offset: -2px;
+  transition: background-color .15s, outline-color .15s;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.tray.targeting { background: var(--blue-soft); outline-color: var(--blue); }
+.tray.over { outline-style: solid; }
+.seat { position: relative; height: var(--ch); }
+.ghost {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: var(--cw);
+  height: var(--ch);
+  margin-left: calc(var(--cw) / -2);
+  display: grid;
+  place-items: center;
+  border: 2px dashed var(--line);
+  border-radius: var(--cr);
+  color: var(--line);
+  font: 600 calc(var(--cw) * .48)/1 var(--font-num);
+}
+
+.card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--cw);
+  height: var(--ch);
+  margin: calc(var(--ch) / -2) 0 0 calc(var(--cw) / -2);
+  padding: 0;
+  border: 0;
+  border-radius: var(--cr);
+  background: transparent;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  perspective: 800px;
+  transition: translate .18s ease;
+  z-index: 1;
+}
+.card .inner {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transform-style: preserve-3d;
+  transition: transform .5s cubic-bezier(.3, .1, .2, 1);
+}
+.card.down .inner { transform: rotateY(180deg); }
+.card .face, .card .back {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: inherit;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.card .face {
+  transform: rotateY(0deg);
+  background: var(--card);
+  color: var(--card-ink);
+  font: 600 calc(var(--cw) * .7)/1 var(--font-num);
+  box-shadow:
+    inset 0 0 0 1.5px var(--card-edge),
+    0 3px 0 var(--card-edge),
+    0 8px 18px rgb(var(--shade) / .16);
+}
+.card .back {
+  transform: rotateY(180deg);
+  background: repeating-linear-gradient(135deg, var(--back) 0 7px, var(--back-2) 7px 14px);
+  color: var(--on-back);
+  font: 600 calc(var(--cw) * .5)/1 var(--font-num);
+  box-shadow:
+    inset 0 0 0 5px var(--back),
+    inset 0 0 0 7px var(--on-back),
+    0 3px 0 var(--back),
+    0 8px 18px rgb(var(--shade) / .2);
+}
+.card:hover .face {
+  box-shadow:
+    inset 0 0 0 1.5px var(--card-edge),
+    0 4px 0 var(--card-edge),
+    0 12px 22px rgb(var(--shade) / .2);
+}
+.card.is-selected { translate: 0 -10px; z-index: 5; }
+.card.is-selected .face {
+  box-shadow:
+    inset 0 0 0 3px var(--blue),
+    0 4px 0 var(--card-edge),
+    0 16px 26px rgb(var(--shade) / .24);
+}
+.card.dragging { z-index: 40; cursor: grabbing; }
+.card.dragging .face {
+  box-shadow:
+    inset 0 0 0 1.5px var(--card-edge),
+    0 4px 0 var(--card-edge),
+    0 22px 34px rgb(var(--shade) / .3);
+}
+.card:focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; }
+.no-trans { transition: none !important; }
+
+.task { display: grid; gap: 14px; min-width: 0; }
+.prompt-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 3.2rem;
+  padding-right: clamp(84px, 15cqi, 128px);
+}
+.prompt {
+  font-size: clamp(22px, 3.5cqi, 36px);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: .03em;
+  text-wrap: balance;
+}
+.prompt .qno { font-family: var(--font-num); font-weight: 600; color: var(--ink-2); margin-right: .35em; }
+.prompt .key { position: relative; display: inline-block; font-style: normal; padding-inline: .08em; }
+.prompt .key::after {
+  content: "";
+  position: absolute;
+  inset: -.1em -.14em -.12em;
+  border: 2.5px solid var(--red);
+  border-radius: 50%;
+  rotate: -3deg;
+  pointer-events: none;
+}
+
+.stamp {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  translate: 0 -50%;
+  width: clamp(80px, 14cqi, 120px);
+  aspect-ratio: 1;
+  max-width: 100%;
+  color: var(--red);
+  mix-blend-mode: var(--stamp-blend);
+  rotate: -12deg;
+  opacity: .92;
+  pointer-events: none;
+  z-index: 2;
+}
+.stamp svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.stamp text { font-family: var(--font-zh); font-weight: 700; font-size: 25px; }
+.stamp.thump { animation: thump .52s cubic-bezier(.2, .9, .25, 1.15) both; }
+@keyframes thump {
+  0% { scale: 1.9; opacity: 0; }
+  60% { scale: .93; opacity: .95; }
+  100% { scale: 1; opacity: .92; }
+}
+
+.chart {
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  width: 100%;
+  max-width: var(--boardw);
+  background: var(--panel);
+  border: 2px solid var(--ink);
+  border-radius: 12px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.col { display: grid; grid-template-rows: auto auto auto; min-width: 0; transition: background-color .12s; }
+.col + .col { border-left: 1.5px solid var(--line); }
+.col:first-child { border-radius: 10px 0 0 10px; }
+.col:last-child { border-radius: 0 10px 10px 0; }
+.col.over { background: var(--blue-soft); }
+.plabel {
+  text-align: center;
+  white-space: nowrap;
+  font-size: clamp(11px, calc(var(--colw) * .25), 24px);
+  font-weight: 700;
+  letter-spacing: .06em;
+  padding: 6px 0 6px .06em;
+  border-bottom: 2px solid var(--ink);
+}
+.well { position: relative; height: calc(var(--ch) + var(--sg) * 2 + 14px); }
+.slot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--cw) + var(--sg) * 2);
+  height: calc(var(--ch) + var(--sg) * 2);
+  margin: calc((var(--ch) + var(--sg) * 2) / -2) 0 0 calc((var(--cw) + var(--sg) * 2) / -2);
+  padding: 0;
+  border: 2px solid var(--line);
+  border-radius: calc(var(--cr) + var(--sg));
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: border-color .15s, background-color .15s;
+}
+.chart.targeting .slot { border-color: var(--blue); border-style: dashed; background: var(--blue-soft); }
+.col.over .slot { border-style: solid; }
+.pval { display: none; }
+.chart.show-values .pval {
+  display: block;
+  min-height: 1.8em;
+  padding: 0 2px 8px;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--ink-2);
+  font: 500 clamp(10px, calc(var(--colw) / (var(--n) * .66)), 20px)/1.3 var(--font-num);
+  letter-spacing: -.01em;
+  font-variant-numeric: tabular-nums;
+}
+@container (max-width: 400px) {
+  .stage[data-n="8"] .chart.show-values .pval { display: none; }
+}
+@container (max-width: 500px) {
+  .stage[data-n="9"] .chart.show-values .pval { display: none; }
+}
+
+.readout { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 22px; min-height: 3.4rem; }
+.ro-num {
+  font: 600 clamp(32px, 6.5cqi, 58px)/1 var(--font-num);
+  letter-spacing: .06em;
+  font-variant-numeric: tabular-nums;
+}
+.ro-num:empty { display: none; }
+.ro-text { display: grid; gap: 2px; min-width: 0; font-size: 19px; text-wrap: pretty; }
+#roExp { color: var(--ink-2); font: 500 17px/1.5 var(--font-num); font-variant-numeric: tabular-nums; }
+#roExp:empty { display: none; }
+
+.tip { font-size: 15.5px; color: var(--ink-2); min-height: 1.6em; transition: color .2s; }
+.tip.flash { color: var(--ink); font-weight: 700; }
+
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.actions .btn-primary { flex: 0 1 220px; min-width: 150px; }
+@media (max-width: 520px) {
+  .actions .btn { flex: 1 1 0; padding-inline: 8px; font-size: 17px; }
+  .actions .btn-primary { flex: 1.6 1 0; min-width: 0; }
+}
+
+.feedback {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1.5px solid var(--line);
+  background: var(--panel);
+  transition: opacity .2s;
+}
+.feedback[data-tone="ok"] { border-color: var(--red); }
+.feedback[data-tone="ok"] .fb-icon, .feedback[data-tone="ok"] .fb-title { color: var(--red); }
+.feedback[data-tone="hint"] { background: var(--hint-bg); border-color: var(--hint-line); color: var(--hint-ink); }
+.feedback[data-tone="info"] { background: var(--blue-soft); border-color: transparent; }
+.feedback[data-tone="info"] .fb-icon { color: var(--blue); }
+.feedback.stale { opacity: .55; }
+.fb-icon svg { width: 30px; height: 30px; display: block; }
+.fb-text { min-width: 0; text-wrap: pretty; }
+.fb-title { font-size: 20px; font-weight: 700; line-height: 1.45; }
+.fb-body, .fb-extra { font-size: 17px; line-height: 1.65; }
+.fb-extra { margin-top: 4px; font-weight: 700; }
+.feedback.pop { animation: pop .28s ease-out; }
+@keyframes pop { from { opacity: 0; translate: 0 6px; } to { opacity: 1; translate: 0 0; } }
+
+/* ---------- dialogs ---------- */
+dialog {
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100dvh - 40px);
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  background: var(--panel);
+  color: var(--ink);
+  box-shadow: 0 30px 70px rgb(var(--shade, 26 41 73) / .35);
+  overflow: auto;
+}
+dialog::backdrop { background: rgb(var(--shade, 20 30 50) / .5); }
+#ansDlg { width: min(780px, calc(100vw - 32px)); }
+.dlg { padding: 20px; display: grid; gap: 16px; }
+.dlg h2 { font-size: 24px; font-weight: 700; }
+.dlg-note { color: var(--ink-2); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; }
+#pickCount { color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; }
+.digit-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; padding-top: 6px; }
+.dbtn {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  max-width: 100%;
+  border: 2px solid var(--card-edge);
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--card-ink);
+  font: 600 clamp(26px, 7vw, 40px)/1 var(--font-num);
+  box-shadow: 0 3px 0 var(--card-edge);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.dbtn[aria-pressed="true"] { border-color: var(--blue); box-shadow: inset 0 0 0 2px var(--blue), 0 3px 0 var(--blue); }
+.dbtn:disabled { opacity: .35; cursor: not-allowed; }
+.dbtn .order {
+  position: absolute;
+  top: -9px;
+  right: -9px;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 12px;
+  background: var(--blue);
+  color: var(--on-blue);
+  font: 600 14px/24px var(--font-num);
+}
+.dbtn .order:empty { display: none; }
+.dlg-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; }
+.dlg-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.ans-cards { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 18px; }
+.mini-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.mini {
+  width: 38px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  background: var(--card);
+  color: var(--card-ink);
+  box-shadow: inset 0 0 0 1.5px var(--card-edge), 0 2px 0 var(--card-edge);
+  font: 600 26px/1 var(--font-num);
+}
+.ans-list { --n: 5; list-style: none; margin: 0; padding: 0; display: grid; }
+.ans-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px 16px;
+  padding-block: 12px;
+  border-top: 1.5px dashed var(--line);
+}
+.ans-q { font-size: 18px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+.ans-q .qn { font-family: var(--font-num); color: var(--ink-2); }
+.ans-badge { display: inline-flex; align-items: center; gap: 3px; color: var(--red); font-size: 14px; }
+.ans-badge svg { width: 15px; height: 15px; }
+.ans-boxes { display: flex; gap: 6px; }
+.ans-boxes .box {
+  flex: 0 1 42px;
+  min-width: 0;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid var(--ink);
+  font: 600 24px/1 var(--font-num);
+}
+.ans-read { grid-column: 1 / -1; color: var(--ink-2); font-size: 15px; }
+.ans-none { color: var(--ink-2); }
+@media (max-width: 640px) {
+  .ans-row { grid-template-columns: minmax(0, 1fr); }
+  .ans-boxes .box { font-size: clamp(14px, calc((100vw - 110px) / var(--n) * .55), 24px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .card .inner, .tray, .slot, .col, .btn, .seg-btn { transition: none; }
+  .stamp.thump, .feedback.pop { animation: none; }
+}
+</style>
+</head>
+<body>
+<header class="school-bar">
+  <p class="school-name">中華基督教會基法小學</p>
+</header>
+
+<div class="app">
+  <aside class="side">
+    <header class="masthead">
+      <h1 class="title-box" id="titleBox">排出五位數</h1>
+      <p class="lede" id="lede">從 0 至 9 的數卡中抽出五張（數字不會重複），按題目把數卡放進位值表，排出指定的五位數。</p>
+    </header>
+
+    <div class="digits" role="group" aria-labelledby="digitsLabel">
+      <div class="digits-head"><span id="digitsLabel">選擇位數</span><span class="digits-note">更改後會重新抽卡</span></div>
+      <div class="seg">
+        <button type="button" class="seg-btn" data-n="2" aria-pressed="false" aria-label="兩位數">2</button>
+        <button type="button" class="seg-btn" data-n="3" aria-pressed="false" aria-label="三位數">3</button>
+        <button type="button" class="seg-btn" data-n="4" aria-pressed="false" aria-label="四位數">4</button>
+        <button type="button" class="seg-btn" data-n="5" aria-pressed="true" aria-label="五位數">5</button>
+        <button type="button" class="seg-btn" data-n="6" aria-pressed="false" aria-label="六位數">6</button>
+        <button type="button" class="seg-btn" data-n="7" aria-pressed="false" aria-label="七位數">7</button>
+        <button type="button" class="seg-btn" data-n="8" aria-pressed="false" aria-label="八位數">8</button>
+        <button type="button" class="seg-btn" data-n="9" aria-pressed="false" aria-label="九位數">9</button>
+      </div>
+    </div>
+
+    <nav class="qnav" aria-label="題目">
+      <div class="qnav-head"><span>工作紙題目</span><span id="progress">完成 0 / 6</span></div>
+      <ol class="qgrid">
+        <li><button type="button" class="qbtn" data-q="0"><span class="qn">1.</span><span class="qt"><span class="qt-long">排出<b class="key">最大</b>的五位數</span><span class="qt-short">最大</span></span><span class="qs"></span></button></li>
+        <li><button type="button" class="qbtn" data-q="1"><span class="qn">2.</span><span class="qt"><span class="qt-long">排出<b class="key">最小</b>的五位數</span><span class="qt-short">最小</span></span><span class="qs"></span></button></li>
+        <li><button type="button" class="qbtn" data-q="2"><span class="qn">3.</span><span class="qt"><span class="qt-long">排出<b class="key">最小</b>的五位<b class="key">奇數</b></span><span class="qt-short">最小奇數</span></span><span class="qs"></span></button></li>
+        <li><button type="button" class="qbtn" data-q="3"><span class="qn">4.</span><span class="qt"><span class="qt-long">排出<b class="key">最大</b>的五位<b class="key">偶數</b></span><span class="qt-short">最大偶數</span></span><span class="qs"></span></button></li>
+        <li><button type="button" class="qbtn" data-q="4"><span class="qn">5.</span><span class="qt"><span class="qt-long">排出<b class="key">最大</b>的五位<b class="key">奇數</b></span><span class="qt-short">最大奇數</span></span><span class="qs"></span></button></li>
+        <li><button type="button" class="qbtn" data-q="5"><span class="qn">6.</span><span class="qt"><span class="qt-long">排出<b class="key">最小</b>的五位<b class="key">偶數</b></span><span class="qt-short">最小偶數</span></span><span class="qs"></span></button></li>
+      </ol>
+      <div class="qextra">
+        <button type="button" class="qbtn qbtn-free" data-q="6">自由排列</button>
+        <button type="button" class="btn btn-quiet" id="allBtn">全部答案</button>
+      </div>
+    </nav>
+
+    <p class="kbd-tip">用鍵盤：輸入數字，數卡會由最高位起順序放入；Backspace 取回；Enter 檢查答案。</p>
+  </aside>
+
+  <main class="stage" data-n="5">
+    <section class="deck" aria-labelledby="deckTitle">
+      <div class="deck-head">
+        <h2 id="deckTitle">五張數卡是：</h2>
+        <div class="deck-actions">
+          <button type="button" class="btn btn-outline" id="drawBtn">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="11" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 7V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            重新抽卡
+          </button>
+          <button type="button" class="btn btn-quiet" id="pickBtn">自選數卡</button>
+        </div>
+      </div>
+      <div class="tray" id="tray"></div>
+    </section>
+
+    <section class="task" aria-labelledby="prompt">
+      <div class="prompt-row">
+        <h2 class="prompt" id="prompt">排出最大的五位數</h2>
+        <div class="stamp" id="stamp" hidden aria-hidden="true">
+          <svg viewBox="0 0 120 120">
+            <defs>
+              <filter id="inkRough" x="-10%" y="-10%" width="120%" height="120%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" seed="7" result="noise"/>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.4"/>
+              </filter>
+            </defs>
+            <g filter="url(#inkRough)">
+              <circle cx="60" cy="60" r="55" fill="none" stroke="currentColor" stroke-width="5"/>
+              <circle cx="60" cy="60" r="47" fill="none" stroke="currentColor" stroke-width="1.6"/>
+              <text id="stampText" x="60" y="57" text-anchor="middle" textLength="72" lengthAdjust="spacingAndGlyphs" fill="currentColor">做得好</text>
+              <path d="M40 71 l12 11 l28 -24" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="chart" id="chart" role="group" aria-label="位值表"></div>
+
+      <div class="readout" id="readout" hidden>
+        <p class="ro-num" id="roNum"></p>
+        <div class="ro-text"><p id="roRead"></p><p id="roExp"></p></div>
+      </div>
+
+      <p class="tip" id="tip">把數卡拖到位值表；也可以先按數卡，再按空格。</p>
+
+      <div class="actions">
+        <button type="button" class="btn btn-primary" id="checkBtn">檢查答案</button>
+        <button type="button" class="btn" id="clearBtn">清除</button>
+        <button type="button" class="btn" id="showBtn">顯示答案</button>
+      </div>
+
+      <div role="status" aria-live="polite">
+        <div class="feedback" id="feedback" hidden>
+          <span class="fb-icon" aria-hidden="true"></span>
+          <div class="fb-text">
+            <p class="fb-title"></p>
+            <p class="fb-body"></p>
+            <p class="fb-extra" hidden></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<dialog id="pickDlg" aria-labelledby="pickTitle">
+  <div class="dlg">
+    <h2 id="pickTitle">自選數卡</h2>
+    <p class="dlg-note"><span id="pickNote">按次序揀選五張不同的數卡。</span><span id="pickCount">已選 0 / 5</span></p>
+    <div class="digit-grid">
+      <button type="button" class="dbtn" data-d="0" aria-pressed="false">0<span class="order" aria-hidden="true"></span></button>
+      <button type="button" class="dbtn" data-d="1" aria-pressed="false">1<span class="order" aria-hidden="true"></span></button>
+      <button type="button" class="dbtn" data-d="2" aria-pressed="false">2<span class="order" aria-hidden="true"></span></button>
+      <button type="button" class="dbtn" data-d="3" aria-pressed="false">3<span class="order" aria-hidden="true"></span></button>
+      <button type="button" class="dbtn" data-d="4" aria-pressed="false">4<span class="order" aria-hidden="true"></span></button>
+      <button type="button" class="dbtn" data-d="5" aria-pressed="false">5<span class="order" aria-hidden="true"></span></button>
+      <button type="button" class="dbtn" data-d="6" aria-pressed="false">6<span class="order" aria-hidden="true"></span></button>
+      <button type="button" class="dbtn" data-d="7" aria-pressed="false">7<span class="order" aria-hidden="true"></span></button>
+      <button type="button" class="dbtn" data-d="8" aria-pressed="false">8<span class="order" aria-hidden="true"></span></button>
+      <button type="button" class="dbtn" data-d="9" aria-pressed="false">9<span class="order" aria-hidden="true"></span></button>
+    </div>
+    <div class="dlg-actions">
+      <button type="button" class="btn" id="pickCancel">取消</button>
+      <button type="button" class="btn btn-primary" id="pickOk" disabled>用這五張數卡</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="ansDlg" aria-labelledby="ansTitle">
+  <div class="dlg">
+    <div class="dlg-head">
+      <h2 id="ansTitle">全部答案</h2>
+      <button type="button" class="btn" id="ansClose">關閉</button>
+    </div>
+    <p class="ans-cards"><span id="ansCardsLabel">五張數卡是：</span><span class="mini-row" id="ansCards"></span></p>
+    <ol class="ans-list" id="ansList"></ol>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  'use strict';
+
+  /* LOGIC:START */
+  const PLACE_NAMES = ['個位', '十位', '百位', '千位', '萬位', '十萬位', '百萬位', '千萬位', '億位', '十億位'];
+  const ZH_DIGITS = '零一二三四五六七八九';
+  const PARITY_NAME = { odd: '奇數', even: '偶數' };
+  const MIN_DIGITS = 2;
+  const MAX_DIGITS = 9;
+
+  /* 兩位數、三位數…；兩張、三張… */
+  const countWord = (n) => (n === 2 ? '兩' : ZH_DIGITS[n]);
+  /* place names from the highest place down to 個位 */
+  const placesFor = (n) => PLACE_NAMES.slice(0, n).reverse();
+  const placeValue = (n, i) => 10 ** (n - 1 - i);
+
+  function questionsFor(n) {
+    const w = `${countWord(n)}位`;
+    return [
+      { kind: 'max', parity: null, text: `排出最大的${w}數`, key: ['最大'] },
+      { kind: 'min', parity: null, text: `排出最小的${w}數`, key: ['最小'] },
+      { kind: 'min', parity: 'odd', text: `排出最小的${w}奇數`, key: ['最小', '奇數'] },
+      { kind: 'max', parity: 'even', text: `排出最大的${w}偶數`, key: ['最大', '偶數'] },
+      { kind: 'max', parity: 'odd', text: `排出最大的${w}奇數`, key: ['最大', '奇數'] },
+      { kind: 'min', parity: 'even', text: `排出最小的${w}偶數`, key: ['最小', '偶數'] },
+    ];
+  }
+
+  const toNumber = (d) => d.reduce((acc, x) => acc * 10 + x, 0);
+  const isOdd = (x) => x % 2 === 1;
+  const matchesParity = (parity, x) => !parity || (parity === 'odd') === isOdd(x);
+  const descending = (list) => list.slice().sort((a, b) => b - a);
+  /* smallest arrangement whose first digit is not 0 (returns a leading 0 only when nothing else is left) */
+  function smallestFirst(list) {
+    const s = list.slice().sort((a, b) => a - b);
+    const i = s.findIndex((x) => x !== 0);
+    if (i <= 0) return s;
+    return [s[i]].concat(s.slice(0, i), s.slice(i + 1));
+  }
+
+  /* Best number for a question. For each possible 個位 card the rest is simply sorted,
+     so trying every 個位 card gives the exact answer (checked against brute force in testing). */
+  function bestArrangement(cards, q, fixedUnits) {
+    const arrange = q.kind === 'max' ? descending : smallestFirst;
+    const options = [];
+    if (!q.parity) {
+      options.push(arrange(cards));
+    } else {
+      const units = fixedUnits != null ? [fixedUnits] : cards.filter((c) => matchesParity(q.parity, c));
+      for (const u of units) options.push(arrange(cards.filter((c) => c !== u)).concat(u));
+    }
+    let best = null;
+    for (const d of options) {
+      if (d[0] === 0) continue;
+      if (best === null || (q.kind === 'max' ? toNumber(d) > toNumber(best) : toNumber(d) < toNumber(best))) best = d;
+    }
+    return best;
+  }
+
+  function evaluate(cards, q, digits) {
+    const answer = bestArrangement(cards, q);
+    if (!answer) return { status: 'impossible' };
+    const missing = digits.filter((d) => d == null).length;
+    if (missing) return { status: 'incomplete', missing, answer };
+    if (digits[0] === 0) return { status: 'leadingZero', answer };
+    const last = digits[digits.length - 1];
+    if (!matchesParity(q.parity, last)) return { status: 'parity', last, answer };
+    const pos = digits.findIndex((d, i) => d !== answer[i]);
+    if (pos === -1) return { status: 'correct', answer };
+    return { status: 'better', pos, answer };
+  }
+
+  /* Hong Kong textbook reading: 二萬、一十 inside a number, 十 at the start (十三、十二萬). */
+  function readChinese(d) {
+    const digits = d.slice();
+    while (digits.length > 1 && digits[0] === 0) digits.shift();
+    const n = digits.length;
+    const inUnits = ['', '十', '百', '千'];
+    const groupUnits = ['', '萬', '億'];
+    let out = '';
+    let zero = false;
+    let groupHasValue = false;
+    digits.forEach((x, i) => {
+      const fromRight = n - 1 - i;
+      const inPos = fromRight % 4;
+      const group = Math.floor(fromRight / 4);
+      if (x === 0) {
+        if (out) zero = true;
+      } else {
+        if (zero) { out += '零'; zero = false; }
+        if (!(x === 1 && inPos === 1 && out === '')) out += ZH_DIGITS[x];
+        out += inUnits[inPos];
+        groupHasValue = true;
+      }
+      if (inPos === 0 && group > 0) {
+        if (groupHasValue) { out += groupUnits[group]; zero = false; }
+        groupHasValue = false;
+      }
+    });
+    return out || '零';
+  }
+
+  function expandedForm(d) {
+    const parts = d.map((x, i) => x * placeValue(d.length, i)).filter((v) => v > 0);
+    return `${toNumber(d)} = ${parts.join(' + ')}`;
+  }
+
+  function impossibleText(cards, q) {
+    const n = cards.length;
+    const P = PARITY_NAME[q.parity];
+    const other = q.parity === 'odd' ? '偶數' : '奇數';
+    const top = placesFor(n)[0];
+    const title = `這${countWord(n)}張數卡排不出${countWord(n)}位${P}。`;
+    const same = cards.filter((c) => matchesParity(q.parity, c));
+    if (!same.length) return { title, body: `數卡全部都是${other}，放在個位的一定是${other}，所以排不出${P}。` };
+    return { title, body: `個位要放 ${same.join('、')}，${top}就只剩下 0，但${top}不可以是 0。` };
+  }
+
+  /* Why the answer is the answer, in classroom words. */
+  function explain(cards, q, ans) {
+    const n = cards.length;
+    const top = placesFor(n)[0];
+    const hasZero = cards.includes(0);
+    const P = PARITY_NAME[q.parity];
+    const same = cards.filter((c) => matchesParity(q.parity, c)).sort((a, b) => a - b);
+    const u = ans[n - 1];
+    if (n === 2) {
+      const t = ans[0];
+      if (!q.parity) {
+        if (q.kind === 'max') return `十位放較大的數卡 ${t}，個位放 ${u}。`;
+        return u === 0 ? `十位不可以是 0，所以十位放 ${t}，個位放 0。` : `十位放較小的數卡 ${t}，個位放 ${u}。`;
+      }
+      if (same.length === 1) return `個位要放${P}卡。只有 ${u} 是${P}，所以個位放 ${u}，十位放 ${t}。`;
+      const natural2 = q.kind === 'max' ? same[0] : same[same.length - 1];
+      if (u === natural2) {
+        return q.kind === 'max'
+          ? `兩張都是${P}卡。把較小的 ${u} 放在個位，較大的 ${t} 放在十位。`
+          : `兩張都是${P}卡。把較大的 ${u} 放在個位，較小的 ${t} 放在十位。`;
+      }
+      return `兩張都是${P}卡，但十位不可以是 0，所以 0 要放在個位，十位放 ${t}。`;
+    }
+    if (!q.parity) {
+      if (q.kind === 'max') return `由${top}開始，把數卡由大到小排。`;
+      return hasZero
+        ? `${top}不可以是 0，所以${top}放 ${ans[0]}，其餘的數卡由小到大排。`
+        : `由${top}開始，把數卡由小到大排。`;
+    }
+    const order = q.kind === 'max' ? '由大到小' : '由小到大';
+    const zeroNote = q.kind === 'min' && hasZero && u !== 0 ? `（${top}不可以是 0）` : '';
+    if (same.length === 1) {
+      return `個位要放${P}卡。這組數卡只有 ${u} 是${P}，所以個位放 ${u}，其餘的數卡${order}排${zeroNote}。`;
+    }
+    const natural = q.kind === 'max' ? same[0] : same[same.length - 1];
+    if (u === natural) {
+      return q.kind === 'max'
+        ? `個位要放${P}卡。把最小的${P}卡 ${u} 放在個位，較大的數卡便可以放在前面，由大到小排。`
+        : `個位要放${P}卡。把最大的${P}卡 ${u} 放在個位，較小的數卡便可以放在前面，由小到大排${zeroNote}。`;
+    }
+    const alt = bestArrangement(cards, q, natural);
+    return q.kind === 'max'
+      ? `個位要放${P}卡。把 ${natural} 放在個位，最大只可以排出 ${toNumber(alt)}；把 ${u} 放在個位，可以排出 ${toNumber(ans)}，比較大。`
+      : `個位要放${P}卡。把 ${natural} 放在個位，最小只可以排出 ${toNumber(alt)}；把 ${u} 放在個位，可以排出 ${toNumber(ans)}，比較小。`;
+  }
+
+  /* General method, shown after two wrong tries. Each sentence holds for every card set it can appear with. */
+  function strategyHint(q, n) {
+    const P = PARITY_NAME[q.parity];
+    if (n === 2) {
+      if (!q.parity) return q.kind === 'max' ? '十位放較大的數卡。' : '十位放較小的數卡（不可以是 0）。';
+      if (q.kind === 'max') return `個位要放${P}卡；如果兩張都是${P}卡，個位放較小的一張。`;
+      if (q.parity === 'odd') return '個位要放奇數卡；如果兩張都是奇數卡，個位放較大的一張。';
+      return '個位要放偶數卡，而十位不可以是 0。';
+    }
+    const top = placesFor(n)[0];
+    if (!q.parity) {
+      return q.kind === 'max'
+        ? `由${top}開始，順序放最大的數卡。`
+        : `${top}放最小的數卡（不可以是 0），其餘的數卡由小到大排。`;
+    }
+    if (q.kind === 'max') return `個位放最小的${P}卡，其餘的數卡由大到小排。`;
+    if (q.parity === 'odd') return `個位放最大的奇數卡，其餘的數卡由小到大排（${top}不可以是 0）。`;
+    return `試試把不同的偶數卡放在個位，其餘的數卡由小到大排（${top}不可以是 0），再比較哪一個最小。`;
+  }
+
+  function compose(cards, q, res, attempts, allDone) {
+    const n = cards.length;
+    const top = placesFor(n)[0];
+    const P = PARITY_NAME[q.parity];
+    switch (res.status) {
+      case 'impossible': {
+        const t = impossibleText(cards, q);
+        return { tone: 'info', title: t.title, body: t.body };
+      }
+      case 'incomplete':
+        return { tone: 'hint', title: `還有 ${res.missing} 個空格。`, body: `請把${countWord(n)}張數卡都放進位值表。` };
+      case 'leadingZero':
+        return { tone: 'hint', title: `${top}不可以是 0。`, body: `${top}是 0 的話，這個數就變成${countWord(n - 1)}位數了。` };
+      case 'parity': {
+        const other = q.parity === 'odd' ? '偶數' : '奇數';
+        const ones = q.parity === 'odd' ? '1、3、5、7 或 9' : '0、2、4、6 或 8';
+        return {
+          tone: 'hint',
+          title: `這個數不是${P}。`,
+          body: `個位是 ${res.last}，所以這個數是${other}。${P}的個位是 ${ones}。`,
+        };
+      }
+      case 'better': {
+        const more = q.kind === 'max' ? '大' : '小';
+        return {
+          tone: 'hint',
+          title: `還可以排出更${more}的數。`,
+          body: `看看${placesFor(n)[res.pos]}：可以放一張更${more}的數卡嗎？`,
+          extra: attempts >= 2 ? `提示：${strategyHint(q, n)}` : '',
+        };
+      }
+      case 'correct':
+      default: {
+        const num = toNumber(res.answer);
+        return {
+          tone: 'ok',
+          stamp: true,
+          stampText: allDone ? '全部完成' : '做得好',
+          title: allDone ? '答對了！六題全部完成。' : '答對了！',
+          body: `${q.text.slice(2)}是 ${num}，讀作${readChinese(res.answer)}。`,
+          extra: allDone ? '可以按「全部答案」核對工作紙，或者按「重新抽卡」再玩一次。' : '',
+        };
+      }
+    }
+  }
+  /* LOGIC:END */
+
+  document.documentElement.lang = 'zh-Hant-HK';
+
+  const FREE = 6;
+  const STORE_KEY = 'paichu-digit-count';
+  const $ = (s, root = document) => root.querySelector(s);
+  const $$ = (s, root = document) => Array.from(root.querySelectorAll(s));
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const calm = () => motion.matches;
+  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, calm() ? 0 : ms));
+
+  const TICK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13l5 5L20 6" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const ICONS = {
+    ok: TICK,
+    hint: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    info: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v6M12 7.6v.4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>',
+  };
+
+  const stage = $('.stage');
+  const tray = $('#tray');
+  const chart = $('#chart');
+  const qButtons = $$('.qbtn[data-q]');
+  const segBtns = $$('.seg-btn');
+  const titleEl = $('#titleBox');
+  const ledeEl = $('#lede');
+  const deckTitle = $('#deckTitle');
+  const promptEl = $('#prompt');
+  const tipEl = $('#tip');
+  const fbBox = $('#feedback');
+  const stampEl = $('#stamp');
+  const stampText = $('#stampText');
+  const readoutEl = $('#readout');
+  const progressEl = $('#progress');
+  const checkBtn = $('#checkBtn');
+  const clearBtn = $('#clearBtn');
+  const showBtn = $('#showBtn');
+  const pickDlg = $('#pickDlg');
+  const ansDlg = $('#ansDlg');
+
+  const state = { n: 5, cards: [], q: 0, boards: [], status: [], attempts: [], fb: [], selected: null };
+  let QUESTIONS = questionsFor(5);
+  let seats = [];
+  let ghosts = [];
+  let cols = [];
+  let wells = [];
+  let slots = [];
+  let pvals = [];
+  let cardEls = [];
+  let busy = false;
+  let drag = null;
+  let tipTimer = 0;
+  let flipTimers = [];
+  let picked = [];
+
+  const board = () => state.boards[state.q];
+  const places = () => placesFor(state.n);
+  const digitsOf = (b) => b.map((ci) => (ci == null ? null : state.cards[ci]));
+
+  function randomCards(n) {
+    const pool = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    for (let i = pool.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    return pool.slice(0, n);
+  }
+
+  function newRound(cards) {
+    state.cards = cards.slice();
+    state.n = cards.length;
+    state.boards = Array.from({ length: 7 }, () => Array(state.n).fill(null));
+    state.status = Array(6).fill('');
+    state.attempts = Array(6).fill(0);
+    state.fb = Array(7).fill(null);
+    state.selected = null;
+  }
+
+  /* ---------- building the tray and the place-value chart ---------- */
+  function makeCard(ci, faceDown) {
+    const el = document.createElement('button');
+    el.type = 'button';
+    el.className = faceDown ? 'card down' : 'card';
+    el.innerHTML = '<span class="inner"><span class="face"></span><span class="back" aria-hidden="true">?</span></span>';
+    el.addEventListener('pointerdown', (e) => {
+      if (busy || drag || el.classList.contains('down') || (e.pointerType === 'mouse' && e.button !== 0)) return;
+      drag = { ci, el, id: e.pointerId, x: e.clientX, y: e.clientY, moved: false, fromSlot: board().includes(ci) };
+      try { el.setPointerCapture(e.pointerId); } catch (err) { /* capture is optional */ }
+    });
+    el.addEventListener('pointermove', (e) => {
+      if (!drag || drag.id !== e.pointerId) return;
+      const dx = e.clientX - drag.x;
+      const dy = e.clientY - drag.y;
+      if (!drag.moved) {
+        if (Math.hypot(dx, dy) < 7) return;
+        drag.moved = true;
+        state.selected = null;
+        el.classList.add('dragging', 'no-trans');
+        renderSelection();
+      }
+      el.style.transform = `translate(${dx}px, ${dy}px) rotate(-3deg) scale(1.06)`;
+      setOver(dropTarget(e.clientX, e.clientY));
+    });
+    el.addEventListener('pointerup', (e) => endDrag(e, false));
+    el.addEventListener('pointercancel', (e) => endDrag(e, true));
+    el.addEventListener('click', (e) => { if (e.detail === 0) onCardTap(ci); });
+    el.addEventListener('contextmenu', (e) => e.preventDefault());
+    return el;
+  }
+
+  function buildBoard(n, faceDown) {
+    const names = placesFor(n);
+    stage.style.setProperty('--n', String(n));
+    stage.dataset.n = String(n);
+    tray.replaceChildren();
+    chart.replaceChildren();
+    seats = [];
+    ghosts = [];
+    cols = [];
+    wells = [];
+    slots = [];
+    pvals = [];
+    cardEls = [];
+    for (let i = 0; i < n; i += 1) {
+      const seat = document.createElement('div');
+      seat.className = 'seat';
+      const ghost = document.createElement('span');
+      ghost.className = 'ghost';
+      ghost.setAttribute('aria-hidden', 'true');
+      seat.appendChild(ghost);
+      tray.appendChild(seat);
+
+      const col = document.createElement('div');
+      col.className = 'col';
+      col.dataset.p = String(i);
+      col.innerHTML = `<div class="plabel">${names[i]}</div><div class="well"><button type="button" class="slot" aria-label="${names[i]}：空格"></button></div><div class="pval"></div>`;
+      col.addEventListener('click', (e) => {
+        if (e.target.closest('.card')) return;
+        onSlotTap(i, e.detail === 0);
+      });
+      chart.appendChild(col);
+
+      const card = makeCard(i, faceDown);
+      seat.appendChild(card);
+      seats.push(seat);
+      ghosts.push(ghost);
+      cols.push(col);
+      wells.push($('.well', col));
+      slots.push($('.slot', col));
+      pvals.push($('.pval', col));
+      cardEls.push(card);
+    }
+  }
+
+  /* ---------- rendering ---------- */
+  function keyed(q, tag) {
+    let html = q.text;
+    q.key.forEach((k) => { html = html.replace(k, `<${tag} class="key">${k}</${tag}>`); });
+    return html;
+  }
+
+  function renderTexts() {
+    const w = countWord(state.n);
+    titleEl.textContent = `排出${w}位數`;
+    ledeEl.textContent = `從 0 至 9 的數卡中抽出${w}張（數字不會重複），按題目把數卡放進位值表，排出指定的${w}位數。`;
+    deckTitle.textContent = `${w}張數卡是：`;
+    QUESTIONS.forEach((q, i) => { $('.qt-long', qButtons[i]).innerHTML = keyed(q, 'b'); });
+    segBtns.forEach((b) => b.setAttribute('aria-pressed', Number(b.dataset.n) === state.n ? 'true' : 'false'));
+  }
+
+  function renderCards() {
+    cardEls.forEach((el, i) => { $('.face', el).textContent = String(state.cards[i]); });
+    ghosts.forEach((g, i) => { g.textContent = String(state.cards[i]); });
+  }
+
+  function syncA11y() {
+    const b = board();
+    const names = places();
+    cardEls.forEach((el, ci) => {
+      const p = b.indexOf(ci);
+      el.setAttribute('aria-label', p === -1 ? `數卡 ${state.cards[ci]}` : `數卡 ${state.cards[ci]}，在${names[p]}`);
+    });
+    slots.forEach((s, p) => {
+      const filled = b[p] != null;
+      s.tabIndex = filled ? -1 : 0;
+      if (filled) s.setAttribute('aria-hidden', 'true');
+      else s.removeAttribute('aria-hidden');
+    });
+  }
+
+  function layoutCards({ animate = true, before = null, stagger = false } = {}) {
+    const anim = animate && !calm() && cardEls.length > 0 && typeof cardEls[0].animate === 'function';
+    const first = anim ? cardEls.map((el) => el.getBoundingClientRect()) : null;
+    const focused = cardEls.indexOf(document.activeElement);
+    cardEls.forEach((el) => el.classList.add('no-trans'));
+    if (before) before();
+    renderSelection();
+    const b = board();
+    cardEls.forEach((el, ci) => {
+      const p = b.indexOf(ci);
+      const host = p === -1 ? seats[ci] : wells[p];
+      if (el.parentElement !== host) host.appendChild(el);
+    });
+    if (focused !== -1 && document.activeElement !== cardEls[focused]) cardEls[focused].focus({ preventScroll: true });
+    if (anim) {
+      cardEls.forEach((el, ci) => {
+        const last = el.getBoundingClientRect();
+        const dx = first[ci].left - last.left;
+        const dy = first[ci].top - last.top;
+        if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
+        const p = b.indexOf(ci);
+        el.animate(
+          [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'translate(0, 0)' }],
+          { duration: 320, easing: 'cubic-bezier(.22,.9,.3,1)', delay: stagger && p !== -1 ? p * 110 : 0, fill: 'backwards' }
+        );
+      });
+    }
+    requestAnimationFrame(() => requestAnimationFrame(() => cardEls.forEach((el) => el.classList.remove('no-trans'))));
+    syncA11y();
+  }
+
+  function renderSelection() {
+    const sel = state.selected;
+    const dragging = Boolean(drag && drag.moved);
+    const heldFromSlot = sel !== null && board().includes(sel);
+    cardEls.forEach((el, i) => {
+      el.classList.toggle('is-selected', sel === i);
+      el.setAttribute('aria-pressed', sel === i ? 'true' : 'false');
+    });
+    chart.classList.toggle('targeting', sel !== null || dragging);
+    tray.classList.toggle('targeting', heldFromSlot || (dragging && drag.fromSlot));
+    renderTip();
+  }
+
+  function renderTip(message) {
+    clearTimeout(tipTimer);
+    if (message) {
+      tipEl.textContent = message;
+      tipEl.classList.add('flash');
+      tipTimer = setTimeout(() => renderTip(), 2600);
+      return;
+    }
+    tipEl.classList.remove('flash');
+    const sel = state.selected;
+    if (sel !== null) {
+      const d = state.cards[sel];
+      tipEl.textContent = board().includes(sel)
+        ? `拿起了數卡 ${d}。按另一個空格移動它，或按上面的數卡位置放回去。`
+        : `拿起了數卡 ${d}。按位值表上的一個空格，把它放下。`;
+    } else if (state.q === FREE) {
+      tipEl.textContent = '隨意排列數卡，看看這個數怎樣讀，每個數字代表多少。';
+    } else {
+      tipEl.textContent = '把數卡拖到位值表；也可以先按數卡，再按空格。';
+    }
+  }
+
+  function renderQuestion() {
+    const free = state.q === FREE;
+    if (free) {
+      promptEl.textContent = '自由排列';
+    } else {
+      promptEl.innerHTML = `<span class="qno">${state.q + 1}.</span>${keyed(QUESTIONS[state.q], 'em')}`;
+    }
+    qButtons.forEach((b) => {
+      if (Number(b.dataset.q) === state.q) b.setAttribute('aria-current', 'true');
+      else b.removeAttribute('aria-current');
+    });
+    checkBtn.hidden = free;
+    showBtn.hidden = free;
+    renderTip();
+  }
+
+  function renderStatus() {
+    QUESTIONS.forEach((q, i) => {
+      const s = state.status[i];
+      const btn = qButtons[i];
+      const el = $('.qs', btn);
+      btn.dataset.status = s || 'none';
+      if (s === 'solved') el.innerHTML = `${TICK}<span>${toNumber(bestArrangement(state.cards, q))}</span>`;
+      else if (s === 'impossible') el.textContent = '排不到';
+      else if (s === 'revealed') el.textContent = '看過答案';
+      else el.textContent = '';
+    });
+    const done = state.status.filter((s) => s === 'solved' || s === 'impossible').length;
+    progressEl.textContent = `完成 ${done} / 6`;
+  }
+
+  function renderFeedback(fresh) {
+    const f = state.fb[state.q];
+    if (!f) {
+      fbBox.hidden = true;
+      stampEl.hidden = true;
+      return;
+    }
+    fbBox.hidden = false;
+    fbBox.dataset.tone = f.tone;
+    fbBox.classList.toggle('stale', Boolean(f.stale));
+    $('.fb-icon', fbBox).innerHTML = ICONS[f.tone] || '';
+    $('.fb-title', fbBox).textContent = f.title;
+    $('.fb-body', fbBox).textContent = f.body || '';
+    const extra = $('.fb-extra', fbBox);
+    extra.textContent = f.extra || '';
+    extra.hidden = !f.extra;
+    if (f.stamp) {
+      const text = f.stampText || '做得好';
+      stampText.textContent = text;
+      stampText.setAttribute('textLength', text.length >= 4 ? '86' : '72');
+      stampEl.hidden = false;
+      if (fresh && !calm()) {
+        stampEl.classList.remove('thump');
+        void stampEl.getBoundingClientRect();
+        stampEl.classList.add('thump');
+      }
+    } else {
+      stampEl.hidden = true;
+    }
+    if (fresh && !calm()) {
+      fbBox.classList.remove('pop');
+      void fbBox.offsetWidth;
+      fbBox.classList.add('pop');
+    }
+  }
+
+  function renderReadout() {
+    const free = state.q === FREE;
+    readoutEl.hidden = !free;
+    chart.classList.toggle('show-values', free);
+    const b = board();
+    pvals.forEach((el, p) => {
+      el.textContent = free && b[p] != null ? String(state.cards[b[p]] * placeValue(state.n, p)) : '';
+    });
+    if (!free) return;
+    const d = digitsOf(b);
+    const missing = d.filter((x) => x == null).length;
+    const roNum = $('#roNum');
+    const roRead = $('#roRead');
+    const roExp = $('#roExp');
+    if (missing) {
+      roNum.textContent = '';
+      roRead.textContent = `還有 ${missing} 張數卡未放進位值表。`;
+      roExp.textContent = '';
+    } else if (d[0] === 0) {
+      roNum.textContent = d.join('');
+      roRead.textContent = `${places()[0]}是 0，這個數不是${countWord(state.n)}位數。`;
+      roExp.textContent = `它其實是${countWord(state.n - 1)}位數 ${toNumber(d)}。`;
+    } else {
+      roNum.textContent = String(toNumber(d));
+      roRead.textContent = `讀作：${readChinese(d)}`;
+      roExp.textContent = expandedForm(d);
+    }
+  }
+
+  function renderAll(fresh) {
+    renderCards();
+    layoutCards({ animate: false });
+    renderQuestion();
+    renderStatus();
+    renderFeedback(fresh);
+    renderReadout();
+  }
+
+  /* ---------- moves ---------- */
+  function boardChanged() {
+    const f = state.fb[state.q];
+    if (f) {
+      if (f.tone === 'hint') f.stale = true;
+      else state.fb[state.q] = null;
+    }
+    renderFeedback(false);
+    renderReadout();
+  }
+
+  /* Put card ci into slot p, or back in the tray when p is -1. A card already in the slot swaps places or goes home. */
+  function moveCard(ci, p, opts = {}) {
+    const b = board();
+    const from = b.indexOf(ci);
+    if (p === -1) {
+      if (from === -1) { state.selected = null; layoutCards(opts); return; }
+      b[from] = null;
+    } else {
+      if (from === p) { state.selected = null; layoutCards(opts); return; }
+      const occupant = b[p];
+      if (from !== -1) b[from] = occupant == null ? null : occupant;
+      b[p] = ci;
+    }
+    state.selected = null;
+    layoutCards(opts);
+    boardChanged();
+  }
+
+  function onCardTap(ci) {
+    if (busy || !cardEls[ci] || cardEls[ci].classList.contains('down')) return;
+    const sel = state.selected;
+    const p = board().indexOf(ci);
+    if (sel === ci) { state.selected = null; renderSelection(); return; }
+    if (sel !== null && p !== -1) { moveCard(sel, p); return; }
+    state.selected = ci;
+    renderSelection();
+  }
+
+  function onSlotTap(p, viaKeyboard) {
+    if (busy) return;
+    const sel = state.selected;
+    if (sel === null) {
+      const ci = board()[p];
+      if (ci != null) { state.selected = ci; renderSelection(); }
+      else renderTip('先按一張數卡，再按這個空格。');
+      return;
+    }
+    moveCard(sel, p);
+    if (viaKeyboard) focusNext();
+  }
+
+  function focusNext() {
+    const b = board();
+    const next = cardEls.find((el, ci) => !b.includes(ci));
+    (next || (state.q === FREE ? clearBtn : checkBtn)).focus({ preventScroll: true });
+  }
+
+  function goQuestion(q) {
+    if (busy || q === state.q) return;
+    state.q = q;
+    state.selected = null;
+    layoutCards();
+    renderQuestion();
+    renderFeedback(false);
+    renderReadout();
+  }
+
+  function check() {
+    if (busy || state.q === FREE) return;
+    const q = QUESTIONS[state.q];
+    const res = evaluate(state.cards, q, digitsOf(board()));
+    if (res.status === 'leadingZero' || res.status === 'parity' || res.status === 'better') state.attempts[state.q] += 1;
+    if (res.status === 'correct') state.status[state.q] = 'solved';
+    if (res.status === 'impossible') state.status[state.q] = 'impossible';
+    const allDone = state.status.every((s) => s === 'solved' || s === 'impossible');
+    state.fb[state.q] = compose(state.cards, q, res, state.attempts[state.q], allDone);
+    state.selected = null;
+    renderSelection();
+    renderStatus();
+    renderFeedback(true);
+  }
+
+  function showAnswer() {
+    if (busy || state.q === FREE) return;
+    const q = QUESTIONS[state.q];
+    const ans = bestArrangement(state.cards, q);
+    if (!ans) {
+      state.status[state.q] = 'impossible';
+      state.fb[state.q] = compose(state.cards, q, { status: 'impossible' }, 0, false);
+    } else {
+      state.boards[state.q] = ans.map((d) => state.cards.indexOf(d));
+      state.selected = null;
+      layoutCards({ stagger: true });
+      if (state.status[state.q] !== 'solved') state.status[state.q] = 'revealed';
+      state.fb[state.q] = {
+        tone: 'info',
+        title: `答案是 ${toNumber(ans)}。`,
+        body: explain(state.cards, q, ans),
+        extra: `讀作${readChinese(ans)}。`,
+      };
+    }
+    renderStatus();
+    renderFeedback(true);
+    renderReadout();
+  }
+
+  function clearBoard() {
+    if (busy) return;
+    state.boards[state.q].fill(null);
+    state.selected = null;
+    state.fb[state.q] = null;
+    layoutCards();
+    renderFeedback(false);
+    renderReadout();
+  }
+
+  function scheduleFlip(fn, ms) {
+    flipTimers.push(setTimeout(fn, calm() ? 0 : ms));
+  }
+
+  async function drawRound(cards) {
+    if (busy) return;
+    busy = true;
+    flipTimers.forEach(clearTimeout);
+    flipTimers = [];
+    state.selected = null;
+    stampEl.hidden = true;
+    fbBox.hidden = true;
+    state.boards.forEach((b) => b.fill(null));
+    layoutCards();
+    await wait(240);
+    cardEls.forEach((el, i) => scheduleFlip(() => el.classList.add('down'), i * 45));
+    await wait(45 * (cardEls.length - 1) + 520);
+    newRound(cards);
+    renderAll(false);
+    cardEls.forEach((el, i) => scheduleFlip(() => el.classList.remove('down'), i * 110));
+    busy = false;
+  }
+
+  function changeDigits(n) {
+    if (busy || n === state.n || !Number.isInteger(n) || n < MIN_DIGITS || n > MAX_DIGITS) return;
+    flipTimers.forEach(clearTimeout);
+    flipTimers = [];
+    try { localStorage.setItem(STORE_KEY, String(n)); } catch (err) { /* remembering the choice is optional */ }
+    QUESTIONS = questionsFor(n);
+    newRound(randomCards(n));
+    buildBoard(n, !calm());
+    renderTexts();
+    renderAll(false);
+    cardEls.forEach((el, i) => scheduleFlip(() => el.classList.remove('down'), 120 + i * 90));
+  }
+
+  /* ---------- dragging ---------- */
+  function dropTarget(x, y) {
+    for (const node of document.elementsFromPoint(x, y)) {
+      if (node.closest('.card.dragging')) continue;
+      const col = node.closest('.col');
+      if (col && chart.contains(col)) return { type: 'slot', p: Number(col.dataset.p) };
+      if (node.closest('.tray')) return { type: 'tray' };
+    }
+    return null;
+  }
+
+  function setOver(t) {
+    cols.forEach((c, p) => c.classList.toggle('over', Boolean(t && t.type === 'slot' && t.p === p)));
+    tray.classList.toggle('over', Boolean(t && t.type === 'tray'));
+  }
+
+  function endDrag(e, cancelled) {
+    if (!drag || drag.id !== e.pointerId) return;
+    const d = drag;
+    drag = null;
+    if (!d.moved) {
+      if (!cancelled) onCardTap(d.ci);
+      return;
+    }
+    const t = cancelled ? null : dropTarget(e.clientX, e.clientY);
+    setOver(null);
+    const before = () => {
+      d.el.classList.remove('dragging');
+      d.el.style.transform = '';
+    };
+    if (t && t.type === 'slot') moveCard(d.ci, t.p, { before });
+    else if (t && t.type === 'tray') moveCard(d.ci, -1, { before });
+    else layoutCards({ before });
+  }
+
+  tray.addEventListener('click', (e) => {
+    if (busy || e.target.closest('.card')) return;
+    const sel = state.selected;
+    if (sel !== null && board().includes(sel)) moveCard(sel, -1);
+  });
+
+  /* ---------- controls ---------- */
+  qButtons.forEach((b) => b.addEventListener('click', () => goQuestion(Number(b.dataset.q))));
+  segBtns.forEach((b) => b.addEventListener('click', () => changeDigits(Number(b.dataset.n))));
+  checkBtn.addEventListener('click', check);
+  clearBtn.addEventListener('click', clearBoard);
+  showBtn.addEventListener('click', showAnswer);
+  $('#drawBtn').addEventListener('click', () => drawRound(randomCards(state.n)));
+
+  function renderPick() {
+    const n = state.n;
+    const w = countWord(n);
+    $$('.dbtn', pickDlg).forEach((b) => {
+      const k = picked.indexOf(Number(b.dataset.d));
+      b.setAttribute('aria-pressed', k === -1 ? 'false' : 'true');
+      $('.order', b).textContent = k === -1 ? '' : String(k + 1);
+      b.disabled = k === -1 && picked.length >= n;
+    });
+    $('#pickNote').textContent = `按次序揀選${w}張不同的數卡。`;
+    $('#pickCount').textContent = `已選 ${picked.length} / ${n}`;
+    const ok = $('#pickOk');
+    ok.textContent = `用這${w}張數卡`;
+    ok.disabled = picked.length !== n;
+  }
+  $('#pickBtn').addEventListener('click', () => {
+    if (busy) return;
+    picked = [];
+    renderPick();
+    pickDlg.showModal();
+  });
+  $$('.dbtn', pickDlg).forEach((b) => b.addEventListener('click', () => {
+    const d = Number(b.dataset.d);
+    const k = picked.indexOf(d);
+    if (k !== -1) picked.splice(k, 1);
+    else if (picked.length < state.n) picked.push(d);
+    renderPick();
+  }));
+  $('#pickCancel').addEventListener('click', () => pickDlg.close());
+  $('#pickOk').addEventListener('click', () => {
+    if (picked.length !== state.n) return;
+    const chosen = picked.slice();
+    pickDlg.close();
+    drawRound(chosen);
+  });
+
+  function renderAnswers() {
+    $('#ansCardsLabel').textContent = `${countWord(state.n)}張數卡是：`;
+    $('#ansCards').innerHTML = state.cards.map((d) => `<span class="mini">${d}</span>`).join('');
+    const list = $('#ansList');
+    list.style.setProperty('--n', String(state.n));
+    list.innerHTML = QUESTIONS.map((q, i) => {
+      const a = bestArrangement(state.cards, q);
+      const badge = state.status[i] === 'solved' ? `<span class="ans-badge">${TICK}已答對</span>` : '';
+      const head = `<p class="ans-q"><span class="qn">${i + 1}.</span><span>${q.text}</span>${badge}</p>`;
+      if (!a) return `<li class="ans-row">${head}<p class="ans-none">排不到：${impossibleText(state.cards, q).body}</p></li>`;
+      const boxes = a.map((d) => `<span class="box">${d}</span>`).join('');
+      return `<li class="ans-row">${head}<div class="ans-boxes" role="img" aria-label="${toNumber(a)}">${boxes}</div><p class="ans-read">讀作${readChinese(a)}</p></li>`;
+    }).join('');
+  }
+  $('#allBtn').addEventListener('click', () => {
+    renderAnswers();
+    ansDlg.showModal();
+  });
+  $('#ansClose').addEventListener('click', () => ansDlg.close());
+  [pickDlg, ansDlg].forEach((dlg) => dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); }));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.altKey || e.ctrlKey || e.metaKey || busy) return;
+    if (document.querySelector('dialog[open]')) return;
+    if (/^[0-9]$/.test(e.key)) {
+      const ci = state.cards.indexOf(Number(e.key));
+      if (ci === -1) { renderTip(`這次沒有數卡 ${e.key}。`); return; }
+      const b = board();
+      if (b.includes(ci)) { renderTip(`數卡 ${e.key} 已經在位值表上。`); return; }
+      const p = b.indexOf(null);
+      if (p === -1) return;
+      e.preventDefault();
+      moveCard(ci, p);
+    } else if (e.key === 'Backspace' || e.key === 'Delete') {
+      const b = board();
+      let ci = state.selected !== null && b.includes(state.selected) ? state.selected : null;
+      if (ci === null) {
+        for (let p = b.length - 1; p >= 0; p -= 1) { if (b[p] != null) { ci = b[p]; break; } }
+      }
+      if (ci !== null) { e.preventDefault(); moveCard(ci, -1); }
+    } else if (e.key === 'Escape') {
+      if (state.selected !== null) { state.selected = null; renderSelection(); }
+    } else if (e.key === 'Enter') {
+      const t = e.target;
+      if (t && t.closest && t.closest('button, a, input, textarea, select')) return;
+      if (state.q !== FREE) { e.preventDefault(); check(); }
+    }
+  });
+
+  /* ---------- start (keeps the round when the page is updated while open) ---------- */
+  function validSaved(d) {
+    if (!d || !Number.isInteger(d.n) || d.n < MIN_DIGITS || d.n > MAX_DIGITS) return false;
+    const n = d.n;
+    if (!Array.isArray(d.cards) || d.cards.length !== n) return false;
+    if (!d.cards.every((x) => Number.isInteger(x) && x >= 0 && x <= 9) || new Set(d.cards).size !== n) return false;
+    if (!Array.isArray(d.boards) || d.boards.length !== 7) return false;
+    return d.boards.every((b) => {
+      if (!Array.isArray(b) || b.length !== n) return false;
+      const used = b.filter((v) => v !== null);
+      return used.every((v) => Number.isInteger(v) && v >= 0 && v < n) && new Set(used).size === used.length;
+    });
+  }
+
+  function start(saved) {
+    let n = 5;
+    try {
+      const remembered = Number(localStorage.getItem(STORE_KEY));
+      if (Number.isInteger(remembered) && remembered >= MIN_DIGITS && remembered <= MAX_DIGITS) n = remembered;
+    } catch (err) { /* no stored choice */ }
+    const restore = validSaved(saved);
+    if (restore) n = saved.n;
+    QUESTIONS = questionsFor(n);
+    if (restore) {
+      newRound(saved.cards);
+      state.boards = saved.boards.map((b) => b.slice());
+      if (Array.isArray(saved.status) && saved.status.length === 6) state.status = saved.status.slice();
+      if (Array.isArray(saved.attempts) && saved.attempts.length === 6) state.attempts = saved.attempts.slice();
+      if (Array.isArray(saved.fb) && saved.fb.length === 7) state.fb = saved.fb.slice();
+      if (Number.isInteger(saved.q) && saved.q >= 0 && saved.q <= FREE) state.q = saved.q;
+    } else {
+      newRound(randomCards(n));
+    }
+    buildBoard(n, false);
+    renderTexts();
+    renderAll(false);
+  }
+
+  try {
+    window.claude?.hot?.snapshot?.(() => ({
+      n: state.n,
+      cards: state.cards,
+      q: state.q,
+      boards: state.boards,
+      status: state.status,
+      attempts: state.attempts,
+      fb: state.fb,
+    }));
+  } catch (err) { /* updates simply start a fresh round */ }
+  const boot = (data) => start(data || {});
+  if (window.claude?.hot?.ready) window.claude.hot.ready(boot);
+  else boot(window.claude?.hot?.data ?? {});
+})();
+</script>
+</body>
+</html>
